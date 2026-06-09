@@ -7,7 +7,10 @@ from datetime import date
 class Node:
     def __init__(
         self,
-        nama,
+         nama,
+        ktp,
+        hp,
+        email,
         tanggal_lahir,
         kategori,
         harga,
@@ -17,6 +20,9 @@ class Node:
         status_cetak="Belum Dicetak"
     ):
         self.nama = nama
+        self.ktp = ktp
+        self.hp = hp
+        self.email = email
         self.tanggal_lahir = tanggal_lahir
         self.kategori = kategori
         self.harga = harga
@@ -37,8 +43,12 @@ class LinkedList:
 
     # Tambah Data
     def tambah(
+      
         self,
         nama,
+        ktp,
+        hp,
+        email,
         tanggal_lahir,
         kategori,
         harga,
@@ -49,6 +59,9 @@ class LinkedList:
 
         node_baru = Node(
             nama,
+            ktp,
+            hp,
+            email,
             tanggal_lahir,
             kategori,
             harga,
@@ -211,7 +224,13 @@ with st.form("form_pemesanan", clear_on_submit=True):
     min_value=date(1900, 1, 1),
     max_value=date(2008, 12, 31),
     value=date(2000, 1, 1)
-) 
+    )
+    ktp = st.text_input("No KTP")
+
+    hp = st.text_input("No HP")
+
+    email = st.text_input("Alamat Email")
+ 
     
 
     kategori = st.selectbox(
@@ -260,8 +279,11 @@ if submit:
         harga = harga_tiket[kategori]
         total = harga * jumlah
 
-        st.session_state.tiket.tambah(
+    st.session_state.tiket.tambah(
             nama,
+            ktp,
+            hp,
+            email,
             tanggal_lahir,
             kategori,
             harga,
@@ -270,8 +292,8 @@ if submit:
             metode_pembayaran
         )
 
-        st.success("✅ Pemesan berhasil ditambahkan")
-        st.rerun()
+    st.success("✅ Pemesan berhasil ditambahkan")
+    st.rerun()
 
 
 # =====================================
@@ -310,6 +332,9 @@ if st.button("Cari Pemesan"):
         st.success("✅ Data ditemukan")
 
         st.write(f"Nama : {hasil.nama}")
+        st.write(f"No KTP : {hasil.ktp}")
+        st.write(f"No HP : {hasil.hp}")
+        st.write(f"Email : {hasil.email}")
         st.write(f"Tanggal Lahir : {hasil.tanggal_lahir}")
         st.write(f"Kategori : {hasil.kategori}")
         st.write(f"Harga Tiket : Rp {hasil.harga:,}")
@@ -317,7 +342,6 @@ if st.button("Cari Pemesan"):
         st.write(f"Total Harga : Rp {hasil.total:,}")
         st.write(f"Metode Pembayaran : {hasil.pembayaran}")
         st.write(f"Status Cetak : {hasil.status_cetak}")
-
     else:
         st.error("❌ Data tidak ditemukan")
 
@@ -374,6 +398,9 @@ if st.button("Cetak Tiket"):
         st.write("## 🎟 TIKET KONSER JUSTIN BIEBER")
         st.write("📅 Tanggal Konser : 25 Desember 2026")
         st.write(f"Nama : {hasil.nama}")
+        st.write(f"No KTP : {hasil.ktp}")
+        st.write(f"No HP : {hasil.hp}")
+        st.write(f"Email : {hasil.email}")
         st.write(f"Tanggal Lahir : {hasil.tanggal_lahir}")
         st.write(f"Kategori Tiket : {hasil.kategori}")
         st.write(f"Jumlah Tiket : {hasil.jumlah}")
