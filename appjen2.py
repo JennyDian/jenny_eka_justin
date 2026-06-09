@@ -1,5 +1,5 @@
 import streamlit as st
-
+from datetime import date
 # =====================================
 # NODE
 # =====================================
@@ -203,10 +203,15 @@ with st.form("form_pemesanan", clear_on_submit=True):
 
     nama = st.text_input("Nama Pemesan")
 
+
+
     tanggal_lahir = st.date_input(
-        "Tanggal Lahir",
-        value=None
-    )
+    "Tanggal Lahir",
+    min_value=date(1900, 1, 1),
+    max_value=date(2008, 12, 31),
+    value=date(2000, 1, 1)
+) 
+    
 
     kategori = st.selectbox(
         "Pilih Kategori Tiket",
@@ -223,14 +228,16 @@ with st.form("form_pemesanan", clear_on_submit=True):
     )
 
     metode_pembayaran = st.selectbox(
-        "Metode Pembayaran",
-        [
-            "Debit",
-            "QRIS",
-            "GoPay",
-            "DANA"
-        ]
-    )
+    "Metode Pembayaran",
+    [
+        "Pilih Metode Pembayaran",
+        "Debit",
+        "QRIS",
+        "GoPay",
+        "DANA"
+    ]
+)
+    
 
     if jumlah is not None:
         harga = harga_tiket[kategori]
