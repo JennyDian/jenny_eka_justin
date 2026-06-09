@@ -312,7 +312,7 @@ if submit:
         st.warning("⚠️ Lengkapi data terlebih dahulu!")
 
     elif tanggal_lahir.year < 1999 or tanggal_lahir.year > 2008:
-        st.warning("⚠️ Tahun lahir harus antara 1999 - 2008!")
+        st.warning("⚠️ Tahun lahir harus antara 1960 - 2008!")
 
     elif kategori == "Pilih Kategori Tiket":
         st.warning("⚠️ Silakan pilih kategori tiket!")
