@@ -183,12 +183,26 @@ cari = st.text_input("Nama Pemesan")
 if st.button("Cari"):
     hasil = st.session_state.tiket.cari(cari)
     if hasil:
-        st.success("Data ditemukan")
-        st.write(vars(hasil))
-    else:
-        st.error("Data tidak ditemukan")
+        st.success("✅ Data Ditemukan")
 
-st.subheader("🗑 Hapus / Retur Pembelian")
+    st.table([
+        {
+            "Nama": hasil.nama,
+            "No KTP": hasil.ktp,
+            "No HP": hasil.hp,
+            "Email": hasil.email,
+            "Tanggal Lahir": hasil.tgl_lahir,
+            "Kategori": hasil.kategori,
+            "Harga Tiket": f"Rp {hasil.harga:,}",
+            "Jumlah Tiket": hasil.jumlah,
+            "Total Bayar": f"Rp {hasil.total:,}",
+            "Metode Pembayaran": hasil.pembayaran
+        }
+    ])
+else:
+    st.error("❌ Data tidak ditemukan")
+
+    st.subheader("🗑 Hapus / Retur Pembelian")
 hapus = st.text_input("Nama yang akan dihapus")
 if st.button("Hapus Pemesanan"):
     if st.session_state.tiket.hapus(hapus):
