@@ -1,86 +1,161 @@
 import streamlit as st
-from datetime import date
 
-# =========================
+# =====================================
 # NODE
-# =========================
+# =====================================
+
 class Node:
-    def __init__(self, nama, ktp, hp, email, tgl_lahir,
-                 kategori, harga, jumlah, total, pembayaran):
+    def __init__(
+        self,
+        nama,
+        tanggal_lahir,
+        kategori,
+        harga,
+        jumlah,
+        total,
+        pembayaran,
+        status_cetak="Belum Dicetak"
+    ):
         self.nama = nama
-        self.ktp = ktp
-        self.hp = hp
-        self.email = email
-        self.tgl_lahir = tgl_lahir
+        self.tanggal_lahir = tanggal_lahir
         self.kategori = kategori
         self.harga = harga
         self.jumlah = jumlah
         self.total = total
         self.pembayaran = pembayaran
+        self.status_cetak = status_cetak
         self.next = None
 
-# =========================
+
+# =====================================
 # LINKED LIST
-# =========================
+# =====================================
+
 class LinkedList:
     def __init__(self):
         self.head = None
 
-    def tambah(self, *data):
-        node = Node(*data)
-        if self.head is None:
-            self.head = node
-        else:
-            cur = self.head
-            while cur.next:
-                cur = cur.next
-            cur.next = node
+    # Tambah Data
+    def tambah(
+        self,
+        nama,
+        tanggal_lahir,
+        kategori,
+        harga,
+        jumlah,
+        total,
+        pembayaran
+    ):
 
+        node_baru = Node(
+            nama,
+            tanggal_lahir,
+            kategori,
+            harga,
+            jumlah,
+            total,
+            pembayaran
+        )
+
+        if self.head is None:
+            self.head = node_baru
+
+        else:
+            current = self.head
+
+            while current.next:
+                current = current.next
+
+            current.next = node_baru
+
+    # Tampilkan Data
     def tampilkan(self):
+
         data = []
-        cur = self.head
-        while cur:
+
+        current = self.head
+
+        while current:
+
             data.append({
-                "Nama": cur.nama,
-                "No KTP": cur.ktp,
-                "No HP": cur.hp,
-                "Email": cur.email,
-                "Tanggal Lahir": cur.tgl_lahir,
-                "Kategori": cur.kategori,
-                "Jumlah": cur.jumlah,
-                "Total": f"Rp {cur.total:,}"
+                "Nama": current.nama,
+                "Tanggal Lahir": current.tanggal_lahir,
+                "Kategori": current.kategori,
+                "Harga Tiket": f"Rp {current.harga:,}",
+                "Jumlah Tiket": current.jumlah,
+                "Total Harga": f"Rp {current.total:,}",
+                "Metode Pembayaran": current.pembayaran,
+                "Status Cetak": current.status_cetak
             })
-            cur = cur.next
+
+            current = current.next
+
         return data
 
+    # Cari Data
     def cari(self, nama):
-        cur = self.head
-        while cur:
-            if cur.nama.lower() == nama.lower():
-                return cur
-            cur = cur.next
+
+        current = self.head
+
+        while current:
+
+            if current.nama.lower() == nama.lower():
+                return current
+
+            current = current.next
+
         return None
 
+    # Hapus Data
     def hapus(self, nama):
-        cur = self.head
+
+        current = self.head
         prev = None
-        while cur:
-            if cur.nama.lower() == nama.lower():
+
+        while current:
+
+            if current.nama.lower() == nama.lower():
+
                 if prev is None:
-                    self.head = cur.next
+                    self.head = current.next
+
                 else:
-                    prev.next = cur.next
+                    prev.next = current.next
+
                 return True
-            prev = cur
-            cur = cur.next
+
+            prev = current
+            current = current.next
+
         return False
 
+    # Cetak Tiket
+    def cetak_tiket(self, nama):
 
-if "tiket_download" not in st.session_state:
-    st.session_state.tiket_download = None
+        current = self.head
 
-if "nama_file" not in st.session_state:
-    st.session_state.nama_file = ""
+        while current:
+
+            if current.nama.lower() == nama.lower():
+                current.status_cetak = "Sudah Dicetak"
+                return current
+
+            current = current.next
+
+        return None
+
+
+# =====================================
+# SESSION STATE
+# =====================================
+
+if "tiket" not in st.session_state:
+    st.session_state.tiket = LinkedList()
+
+
+# =====================================
+# HARGA TIKET
+# =====================================
 
 harga_tiket = {
     "VIP": 8000000,
@@ -89,125 +164,215 @@ harga_tiket = {
     "CAT 3": 2000000
 }
 
+
+# =====================================
+# HEADER
+# =====================================
+
 st.title("🎤 Tiket Konser Justin Bieber")
-st.subheader("12 Desember 2026")
+
+st.write(
+    "Sistem Pemesanan Tiket Konser Justin Bieber Menggunakan Linked List"
+)
+
+
+# =====================================
+# DAFTAR HARGA
+# =====================================
+
+st.subheader("🎫 Daftar Harga Tiket")
 
 st.info("""
-VIP : Rp 8.000.000
-CAT 1 : Rp 4.500.000
-CAT 2 : Rp 3.000.000
-CAT 3 : Rp 2.000.000
+VIP    : Rp 8.000.000
+
+CAT 1  : Rp 4.500.000
+
+CAT 2  : Rp 3.000.000
+
+CAT 3  : Rp 2.000.000
 """)
 
-with st.form("form", clear_on_submit=True):
-    nama = st.text_input("Nama")
-    ktp = st.text_input("No KTP")
-    hp = st.text_input("No HP")
-    email = st.text_input("Alamat Email")
 
-    tgl_lahir = st.date_input(
+# =====================================
+# FORM PEMESANAN
+# =====================================
+
+st.subheader("📝 Form Pemesanan Tiket")
+
+with st.form("form_pemesanan", clear_on_submit=True):
+
+    nama = st.text_input("Nama Pemesan")
+
+    tanggal_lahir = st.date_input(
         "Tanggal Lahir",
-        min_value=date(1900,1,1),
-        max_value=date(2008,12,31),
-        value=date(2000,1,1)
+        value=None
     )
 
     kategori = st.selectbox(
-        "Kategori Tiket",
-        ["Pilih","VIP","CAT 1","CAT 2","CAT 3"]
+        "Pilih Kategori Tiket",
+        ["VIP", "CAT 1", "CAT 2", "CAT 3"]
     )
 
     jumlah = st.number_input(
-        "Jumlah Tiket",
-        min_value=0,
-        max_value=10,
-        value=0
+    "Jumlah Tiket",
+    min_value=1,
+    max_value=4,
+    step=1,
+    value=None,
+    placeholder="Maksimal 4 tiket"
     )
 
-    pembayaran = st.selectbox(
+    metode_pembayaran = st.selectbox(
         "Metode Pembayaran",
-        ["Pilih","Transfer Bank","QRIS","DANA","GoPay"]
+        [
+            "Debit",
+            "QRIS",
+            "GoPay",
+            "DANA"
+        ]
     )
 
-    harga = 0 if kategori == "Pilih" else harga_tiket[kategori]
-    total = harga * jumlah
+    if jumlah is not None:
+        harga = harga_tiket[kategori]
+        total = harga * jumlah
 
-    st.write(f"Harga Tiket : Rp {harga:,}")
-    st.write(f"Total Harga : Rp {total:,}")
+        st.write(f"### Harga Tiket : Rp {harga:,}")
+        st.write(f"### Total Harga : Rp {total:,}")
 
-    submit = st.form_submit_button("Tambah Pemesanan")
+    submit = st.form_submit_button("Tambah Pemesan")
+
 
 if submit:
-    if not nama or not ktp or not hp or not email:
-        st.warning("Lengkapi data terlebih dahulu.")
-    elif kategori == "Pilih":
-        st.warning("Pilih kategori tiket.")
-    elif pembayaran == "Pilih":
-        st.warning("Pilih metode pembayaran.")
-    elif jumlah <= 0:
-        st.warning("Jumlah tiket harus lebih dari 0.")
+
+    if nama == "" or jumlah is None:
+        st.warning("Masukkan data terlebih dahulu!")
+
     else:
+
+        harga = harga_tiket[kategori]
+        total = harga * jumlah
+
         st.session_state.tiket.tambah(
-            nama, ktp, hp, email, tgl_lahir,
-            kategori, harga, jumlah, total, pembayaran
+            nama,
+            tanggal_lahir,
+            kategori,
+            harga,
+            jumlah,
+            total,
+            metode_pembayaran
         )
 
-        kode = f"JB-{nama[:3].upper()}-{ktp[-4:]}"
-        tiket = f"""
-TIKET KONSER JUSTIN BIEBER
-Tanggal Konser : 12 Desember 2026
-Kode Tiket : {kode}
-
-Nama : {nama}
-Kategori : {kategori}
-Jumlah Tiket : {jumlah}
-Total Bayar : Rp {total:,}
-
-Penukaran Tiket:
-12 Desember 2026 (H-0)
-3 Jam Sebelum Konser Dimulai
-"""
-        st.session_state.tiket_download = tiket
-st.session_state.nama_file = f"{kode}.txt"
+        st.success("✅ Pemesan berhasil ditambahkan")
+        st.rerun()
 
 
+# =====================================
+# DAFTAR PEMESAN
+# =====================================
 
 st.subheader("📋 Daftar Pemesan")
+
 data = st.session_state.tiket.tampilkan()
+
 if data:
     st.table(data)
+
 else:
     st.info("Belum ada data pemesan.")
 
+
+# =====================================
+# CARI PEMESAN
+# =====================================
+
 st.subheader("🔍 Cari Pemesan")
-cari = st.text_input("Nama Pemesan")
-if st.button("Cari"):
-    hasil = st.session_state.tiket.cari(cari)
+
+nama_cari = st.text_input(
+    "Masukkan nama pemesan yang dicari"
+)
+
+if st.button("Cari Pemesan"):
+
+    hasil = st.session_state.tiket.cari(
+        nama_cari
+    )
+
     if hasil:
-        st.success("✅ Data Ditemukan")
 
-    st.table([
-        {
-            "Nama": hasil.nama,
-            "No KTP": hasil.ktp,
-            "No HP": hasil.hp,
-            "Email": hasil.email,
-            "Tanggal Lahir": hasil.tgl_lahir,
-            "Kategori": hasil.kategori,
-            "Harga Tiket": f"Rp {hasil.harga:,}",
-            "Jumlah Tiket": hasil.jumlah,
-            "Total Bayar": f"Rp {hasil.total:,}",
-            "Metode Pembayaran": hasil.pembayaran
-        }
-    ])
-else:
-    st.error("❌ Data tidak ditemukan")
+        st.success("✅ Data ditemukan")
 
-    st.subheader("🗑 Hapus Pemesan")
-hapus = st.text_input("Nama yang akan dihapus")
-if st.button("Hapus Pemesanan"):
-    if st.session_state.tiket.hapus(hapus):
-        st.success("Pemesanan berhasil dihapus")
-        st.rerun()
+        st.write(f"Nama : {hasil.nama}")
+        st.write(f"Tanggal Lahir : {hasil.tanggal_lahir}")
+        st.write(f"Kategori : {hasil.kategori}")
+        st.write(f"Harga Tiket : Rp {hasil.harga:,}")
+        st.write(f"Jumlah Tiket : {hasil.jumlah}")
+        st.write(f"Total Harga : Rp {hasil.total:,}")
+        st.write(f"Metode Pembayaran : {hasil.pembayaran}")
+        st.write(f"Status Cetak : {hasil.status_cetak}")
+
     else:
-        st.error("Data tidak ditemukan")
+        st.error("❌ Data tidak ditemukan")
+
+
+# =====================================
+# HAPUS PEMESAN
+# =====================================
+
+st.subheader("🗑 Hapus Pemesan")
+
+nama_hapus = st.text_input(
+    "Masukkan nama pemesan yang akan dihapus"
+)
+
+if st.button("Hapus Pemesan"):
+
+    berhasil = st.session_state.tiket.hapus(
+        nama_hapus
+    )
+
+    if berhasil:
+
+        st.success(
+            f"✅ Data {nama_hapus} berhasil dihapus"
+        )
+
+        st.rerun()
+
+    else:
+
+        st.error("❌ Data tidak ditemukan")
+
+
+# =====================================
+# CETAK TIKET
+# =====================================
+
+st.subheader("🎫 Cetak Tiket")
+
+nama_cetak = st.text_input(
+    "Masukkan nama pemesan yang akan dicetak"
+)
+
+if st.button("Cetak Tiket"):
+
+    hasil = st.session_state.tiket.cetak_tiket(
+        nama_cetak
+    )
+
+    if hasil:
+
+        st.success("✅ Tiket berhasil dicetak")
+
+        st.write("## 🎟 TIKET KONSER JUSTIN BIEBER")
+        st.write(f"Nama : {hasil.nama}")
+        st.write(f"Tanggal Lahir : {hasil.tanggal_lahir}")
+        st.write(f"Kategori Tiket : {hasil.kategori}")
+        st.write(f"Jumlah Tiket : {hasil.jumlah}")
+        st.write(f"Metode Pembayaran : {hasil.pembayaran}")
+        st.write(f"Total Harga : Rp {hasil.total:,}")
+
+        st.success("🎉 Selamat Menikmati Konser Justin Bieber 🎉")
+
+    else:
+
+        st.error("❌ Data tidak ditemukan")
