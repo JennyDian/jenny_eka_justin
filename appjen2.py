@@ -175,6 +175,7 @@ st.write(
     "Sistem Pemesanan Tiket Konser Justin Bieber Menggunakan Linked List"
 )
 
+st.success("📅 Tanggal Konser : 25 Desember 2026")
 
 # =====================================
 # DAFTAR HARGA
@@ -371,12 +372,24 @@ if st.button("Cetak Tiket"):
         st.success("✅ Tiket berhasil dicetak")
 
         st.write("## 🎟 TIKET KONSER JUSTIN BIEBER")
+        st.write("📅 Tanggal Konser : 25 Desember 2026")
         st.write(f"Nama : {hasil.nama}")
         st.write(f"Tanggal Lahir : {hasil.tanggal_lahir}")
         st.write(f"Kategori Tiket : {hasil.kategori}")
         st.write(f"Jumlah Tiket : {hasil.jumlah}")
         st.write(f"Metode Pembayaran : {hasil.pembayaran}")
         st.write(f"Total Harga : Rp {hasil.total:,}")
+
+        st.info("""
+🎫 Penukaran Tiket
+
+Tanggal Konser : 25 Desember 2026
+
+Penukaran tiket dimulai
+3 jam sebelum konser dimulai.
+
+Mohon membawa identitas diri saat penukaran tiket.
+""")
 
         st.success("🎉 Selamat Menikmati Konser Justin Bieber 🎉")
 
