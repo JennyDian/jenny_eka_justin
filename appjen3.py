@@ -240,9 +240,9 @@ with st.form("form_pemesanan", clear_on_submit=True):
 
     tanggal_lahir = st.date_input(
     "Tanggal Lahir",
-    min_value=date(0, 1, 1),
+    min_value=date(1960, 1, 1),
     max_value=date(2008, 12, 31),
-    value=date(0, 1, 1)
+    value=date(1960, 1, 1)
 
 )
 
