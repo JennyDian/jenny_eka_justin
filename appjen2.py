@@ -170,16 +170,7 @@ Penukaran Tiket:
         st.session_state.tiket_download = tiket
 st.session_state.nama_file = f"{kode}.txt"
 
-if st.session_state.tiket_download:
 
-    st.subheader("🎟 Download Tiket")
-
-    st.download_button(
-        label="📥 Download Tiket",
-        data=st.session_state.tiket_download,
-        file_name=st.session_state.nama_file,
-        mime="text/plain"
-    )
 
 st.subheader("📋 Daftar Pemesan")
 data = st.session_state.tiket.tampilkan()
