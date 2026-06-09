@@ -75,8 +75,12 @@ class LinkedList:
             cur = cur.next
         return False
 
-if "tiket" not in st.session_state:
-    st.session_state.tiket = LinkedList()
+
+if "tiket_download" not in st.session_state:
+    st.session_state.tiket_download = None
+
+if "nama_file" not in st.session_state:
+    st.session_state.nama_file = ""
 
 harga_tiket = {
     "VIP": 8000000,
@@ -163,13 +167,19 @@ Penukaran Tiket:
 12 Desember 2026 (H-0)
 3 Jam Sebelum Konser Dimulai
 """
-        st.success("Pemesanan berhasil.")
-        st.download_button(
-            "📥 Download Tiket",
-            tiket,
-            file_name=f"{kode}.txt",
-            mime="text/plain"
-        )
+        st.session_state.tiket_download = tiket
+st.session_state.nama_file = f"{kode}.txt"
+
+if st.session_state.tiket_download:
+
+    st.subheader("🎟 Download Tiket")
+
+    st.download_button(
+        label="📥 Download Tiket",
+        data=st.session_state.tiket_download,
+        file_name=st.session_state.nama_file,
+        mime="text/plain"
+    )
 
 st.subheader("📋 Daftar Pemesan")
 data = st.session_state.tiket.tampilkan()
@@ -202,7 +212,7 @@ if st.button("Cari"):
 else:
     st.error("❌ Data tidak ditemukan")
 
-    st.subheader("🗑 Hapus / Retur Pembelian")
+    st.subheader("🗑 Hapus Pemesan")
 hapus = st.text_input("Nama yang akan dihapus")
 if st.button("Hapus Pemesanan"):
     if st.session_state.tiket.hapus(hapus):
